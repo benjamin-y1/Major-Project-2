@@ -33,27 +33,28 @@ class Player:
     def update(self):
         self.rect = (self.x, self.y, self.width, self.height)
 
-class Board:
-    def __init__(self, x, y):
+class Cell:
+    def __init__(self, value, colour, x, y, surface):
+        self.value = value
+        self.colour = colour
         self.x = x
-        self. y = y
-        self.values = [[0, 0], [0, 0]]
+        self.y = y
+        self.pos = (self.x, self.y)
+        self.rect = (self.x, self.y, 50, 50)
+        self.surface = surface
 
-    def drawBoard(self, win, font):
-        for i in range(2):
-            for j in range(2):
-                if j == i:
-                    colour = (255, 0, 0)
-                else:
-                    colour = (0, 255, 0)
+    def draw(self, win):
+        self.surface = pygame.Surface((50, 50))
+        self.surface.fill(self.colour)
+        win.blit(self.surface, self.pos)
 
-                n = pygame.draw.rect(win, colour, (self.x + j * 50, self.y + i * 50, 50, 50))
+    def update_text(self, font):
+        text_surface = font.render(self.value, False, (0, 0, 0))
+        self.surface.blit(text_surface, (0, 0))
 
-                self.drawValues(win, n, font, self.values[j][i])
+class Board:
+    def __init__(self):
+        self.cells = []
 
-    def drawValues(self, win, rect, font, value):
-        text_surface = font.render(value, False, (0, 0, 0))
-        rect.blit(text_surface, (0, 0))
 
-    def change(self, x, y):
-        self.values[x][y] += 1
+
