@@ -53,8 +53,20 @@ class Cell:
         self.surface.blit(text_surface, (0, 0))
 
 class Board:
-    def __init__(self):
-        self.cells = []
+    def __init__(self, dimension):
+        self.cells = [[] for i in range(dimension)]
+        self.dimension = dimension
+
+    def initiate(self, win):
+        for i in range(self.dimension):
+            for j in range(self.dimension):
+                self.cells[i].append(Cell("", (255, 255, 255), 0 + j * 50, 0 + i * 50, win))
+                self.cells[i][j].draw(win)
+
+    def draw(self, font):
+        for i in range(self.dimension):
+            for j in range(self.dimension):
+                self.cells[i][j].update_text(font)
 
 
 
