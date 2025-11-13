@@ -16,38 +16,35 @@ def update(my_board, op_board):
     op_board.draw(win, font)
     pygame.display.update()
 
+#my_board = Board(10, 10, 10)
+
 def main():
-    global my_board, op_board
     run = True
     clock = pygame.time.Clock()
     n = Network()
-    try:
-        my_board = n.connect()
-        my_board.initiate(win, font)
-    except:
-        print("bad, don't work because of this thing")
+    my_board = n.connect()
+    if isinstance(my_board, Board):
+        print("Connected")
+    my_board.initiate(win, font)
 
     while run:
         clock.tick(60)
 
-        try:
-            op_board = n.receive_board()
-        except:
-            print("okay, like stop")
-
-        try:
-            n.send_board(my_board)
-        except:
-            print("lol, bad, like actually bad")
+        n.send_board(my_board)
+        op_board = n.receive_board()
+        op_board.initiate(win, font)
+        print("lalalala")
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
 
-        try:
-            update(my_board, op_board)
-        except:
-            print("this is whats not working")
+        #check_highlight(my_board, win, font)
+        #my_board.draw(win, font)
+        #pygame.display.update()
+
+        update(my_board, op_board)
+
 
 main()

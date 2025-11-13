@@ -49,22 +49,19 @@ class Board:
     def initiate(self, win, font):
         for i in range(self.dimension):
             for j in range(self.dimension):
-                self.cells[i].append(Cell("O", (255, 255, 255), self.start_x + j * 52, self.start_y + i * 52))
+                self.cells[i].append(Cell("", (255, 255, 255), self.start_x + j * 52, self.start_y + i * 52))
                 self.cells[i][j].draw(win, font)
 
     def draw(self, win, font):
-        for i in range(self.dimension):
-            for j in range(self.dimension):
-                self.cells[i][j].draw(win, font)
+        for lines in range(self.dimension):
+            for cells in range(self.dimension):
+                self.cells[lines][cells].draw(win, font)
 
     def whiten(self, win, font):
         for i in self.cells:
             for j in i:
                 j.colour = (255, 255, 255)
                 j.draw(win, font)
-
-
-
 
 
 def check_highlight(board, win, font):

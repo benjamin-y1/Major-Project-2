@@ -5,14 +5,14 @@ class Network:
 
     def __init__(self):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server = "192.168.68.60"
+        self.server = "10.174.28.104"
         self.port = 5555
         self.addr = (self.server, self.port)
 
     def connect(self):
         try:
             self.client.connect(self.addr)
-            board = pickle.loads(self.client.recv(8192))
+            board = pickle.loads(self.client.recv(16384))
             return board
 
         except:
@@ -26,6 +26,6 @@ class Network:
 
     def receive_board(self):
         try:
-            return pickle.loads(self.client.recv(8192))
+            return pickle.loads(self.client.recv(16384))
         except:
             print("Couldn't receive board")

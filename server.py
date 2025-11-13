@@ -4,7 +4,7 @@ import sys
 from player import Board, Cell
 import pickle
 
-server = "192.168.68.60"
+server = "10.174.28.104"
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -28,7 +28,7 @@ def threaded_client(conn, player):
     reply = ""
     while True:
         try:
-            data = pickle.loads(conn.recv(8192))
+            data = pickle.loads(conn.recv(16384))
 
             if not data:
                 print("Disconnected")
