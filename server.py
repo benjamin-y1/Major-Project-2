@@ -1,7 +1,7 @@
 import socket
 from _thread import *
 import sys
-from player import Player
+from player import Board, Cell
 import pickle
 
 server = "192.168.68.60"
@@ -15,34 +15,32 @@ try:
 
 except socket.error as e:
 
-    str(e)
+    print("This went wrong")
 
 s.listen(2)
 
 print("Waiting for a connection, Server Started")
 
-players = [Player(0, 0, 50, 50, (255, 0, 0)), Player(100, 100, 50, 50, (0, 255, 0))]
+boards = [Board(10, 10, 10), Board(10, 600, 10)]
 
 def threaded_client(conn, player):
-    conn.send(pickle.dumps(players[player]))
+    conn.sendall(pickle.dumps(boards[player]))
     reply = ""
     while True:
         try:
-            data = pickle.loads(conn.recv(2048))
-            players[player] = data
+            data = pickle.loads(conn.recv(8192))
 
             if not data:
                 print("Disconnected")
                 break
             else:
-                if player == 1:
-                    reply = players[0]
-                else:
-                    reply = players[1]
-                print("Received: ", data)
-                print("Sending: ", reply)
+                reply = boards[(player + 1) % 2]
+
+            print("Received: ", data)
+            print("Sending: ", reply)
 
             conn.sendall(pickle.dumps(reply))
+
         except:
             break
 
@@ -50,6 +48,7 @@ def threaded_client(conn, player):
     conn.close()
 
 currentPlayer = 0
+
 while True:
     conn, addr = s.accept()
     print("Connected to:", addr)

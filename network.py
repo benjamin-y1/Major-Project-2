@@ -8,21 +8,24 @@ class Network:
         self.server = "192.168.68.60"
         self.port = 5555
         self.addr = (self.server, self.port)
-        self.p = self.connect()
-
-    def getP(self):
-        return self.p
 
     def connect(self):
         try:
             self.client.connect(self.addr)
-            return pickle.loads(self.client.recv(2048))
-        except:
-            pass
+            board = pickle.loads(self.client.recv(8192))
+            return board
 
-    def send(self, data):
+        except:
+            print("connection failed")
+
+    def send_board(self, board):
         try:
-            self.client.send(pickle.dumps(data))
-            return pickle.loads(self.client.recv(2048))
-        except socket.error as e:
-            print(e)
+            self.client.sendall(pickle.dumps(board))
+        except:
+            print("Couldn't Send Board")
+
+    def receive_board(self):
+        try:
+            return pickle.loads(self.client.recv(8192))
+        except:
+            print("Couldn't receive board")
