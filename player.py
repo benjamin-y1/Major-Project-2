@@ -45,6 +45,7 @@ class Cell:
     def highlight(self, win, font):
         yellow = (253, 217, 3)
         self.colour = yellow
+        self.value = "A"
         self.draw(win, font)
 
     def highlight_line(self, win, font):
@@ -59,7 +60,7 @@ class Board:
         self.start_x = start_x
         self.start_y = start_y
 
-    def initiate(self, win, font):
+    def initiate(self):
         for i in range(self.dimension):
             for j in range(self.dimension):
                 self.cells[i].append(Cell("", (255, 255, 255), self.start_x + j * 52, self.start_y + i * 52))
@@ -73,6 +74,7 @@ class Board:
         for i in self.cells:
             for j in i:
                 j.colour = (255, 255, 255)
+                j.value = ""
                 j.draw(win, font)
 
 

@@ -22,9 +22,11 @@ s.listen(2)
 print("Waiting for a connection, Server Started")
 
 boards = [Board(10, 10, 10), Board(10, 600, 10)]
+for i in boards:
+    i.initiate()
 
 def threaded_client(conn, player):
-    conn.sendall(pickle.dumps(boards[player]))
+    conn.send(pickle.dumps(boards[player]))
     reply = ""
     while True:
         try:
