@@ -9,6 +9,8 @@ class Cell:
         self.pos = (self.x, self.y)
         self.rect = ""
 
+        self.mousedown = False
+
     def draw(self, win, font):
         border = pygame.Surface((52, 52))
         border.fill((0, 0, 0))
@@ -25,7 +27,18 @@ class Cell:
 
     def check_if_highlighted(self):
         rect = pygame.Rect(self.pos[0], self.pos[1], 50, 50)
-        if rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed(num_buttons=3)[0]:
+
+        if pygame.mouse.get_pressed()[0]:
+            if self.mousedown:
+                return False
+
+            self.mousedown = True
+
+        else:
+            self.mousedown = False
+            return False
+
+        if rect.collidepoint(pygame.mouse.get_pos()):
             return True
         return False
 
@@ -50,7 +63,6 @@ class Board:
         for i in range(self.dimension):
             for j in range(self.dimension):
                 self.cells[i].append(Cell("", (255, 255, 255), self.start_x + j * 52, self.start_y + i * 52))
-                self.cells[i][j].draw(win, font)
 
     def draw(self, win, font):
         for lines in range(self.dimension):
