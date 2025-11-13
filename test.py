@@ -26,6 +26,7 @@ def main():
     if isinstance(my_board, Board):
         print("Connected")
     my_board.initiate(win, font)
+    my_board.draw(win, font)
 
     while run:
         clock.tick(60)
