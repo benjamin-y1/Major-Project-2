@@ -18,6 +18,18 @@ grid_access = []
 for row in range(p.height):
     grid_access.append(''.join(grid.get_row(row)))
 
+numbering = p.clue_numbering()
+
+grid_numbers = [[0 for x in range(p.width)] for y in range(p.height)]
+
+for clue in numbering.across:
+    if clue['num']:
+        grid_numbers[clue['row']][clue['col']] = clue['num']
+
+for clue in numbering.down:
+    if clue['num']:
+        grid_numbers[clue['row']][clue['col']] = clue['num']
+
 print(grid_access)
 
 server = "192.168.68.60"
@@ -37,7 +49,7 @@ s.listen(2)
 
 print("Waiting for a connection, Server Started")
 
-boards = [Board(15, 15,10, 10, grid_access), Board(15, 15, 1000, 10, grid_access)]
+boards = [Board(15, 15,10, 10, grid_access, grid_numbers), Board(15, 15, 1000, 10, grid_access, grid_numbers)]
 
 def threaded_client(conn, player):
     conn.send(pickle.dumps(boards[player]))
