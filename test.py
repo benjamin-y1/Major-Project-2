@@ -1,17 +1,17 @@
 import pygame
-from player import Cell, Board, check_highlight
+from player import Cell, Board
 from network import Network
 
 pygame.font.init()
 font = pygame.font.SysFont('Ariel', 35)
 
-width = 1200
-height = 600
+width = 2000
+height = 900
 win = pygame.display.set_mode((width, height))
 win.fill((255, 255, 255))
 
 def update(my_board, op_board):
-    check_highlight(my_board, win, font)
+    my_board.check_highlight(win, font)
     my_board.draw(win, font)
     op_board.draw(win, font)
     pygame.display.update()

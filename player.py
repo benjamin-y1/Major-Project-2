@@ -45,7 +45,6 @@ class Cell:
     def highlight(self, win, font):
         yellow = (253, 217, 3)
         self.colour = yellow
-        self.value = "A"
         self.draw(win, font)
 
     def highlight_line(self, win, font):
@@ -54,38 +53,47 @@ class Cell:
         self.draw(win, font)
 
 class Board:
-    def __init__(self, dimension, start_x ,start_y):
-        self.cells = [[] for i in range(dimension)]
-        self.dimension = dimension
+    def __init__(self, height, width, start_x ,start_y, grid_access):
+        self.cells = [[] for i in range(height)]
+        self.height = height
+        self.width = width
         self.start_x = start_x
         self.start_y = start_y
+        self.grid_access = grid_access
 
-    def initiate(self):
-        for i in range(self.dimension):
-            for j in range(self.dimension):
-                self.cells[i].append(Cell("", (255, 255, 255), self.start_x + j * 52, self.start_y + i * 52))
+        for i in range(self.height):
+            for j in range(self.width):
+                if self.grid_access[i][j] == "-":
+                    self.cells[i].append(Cell("", (255, 255, 255), self.start_x + j * 52, self.start_y + i * 52))
+                else:
+                    self.cells[i].append(Cell("", (0, 0, 0), self.start_x + j * 52, self.start_y + i * 52))
 
     def draw(self, win, font):
-        for lines in range(self.dimension):
-            for cells in range(self.dimension):
+        for lines in range(self.height):
+            for cells in range(self.width):
                 self.cells[lines][cells].draw(win, font)
 
     def whiten(self, win, font):
-        for i in self.cells:
-            for j in i:
-                j.colour = (255, 255, 255)
-                j.value = ""
-                j.draw(win, font)
+        for i in range(len(self.cells)):
+            for j in range(len(self.cells[i])):
+               if self.grid_access[i][j] == "-":
+                    print(self.grid_access)
+                    self.cells[i][j].colour = (255, 255, 255)
+                    self.cells[i][j].draw(win, font)
 
+    def check_highlight(self, win, font):
+        for i in range(len(self.cells)):
+            for j in range(len(self.cells[i])):
+                if self.grid_access[i][j] == "-":
+                    if self.cells[i][j].check_if_highlighted():
+                        self.whiten(win, font)
+                        for k in range(len(self.cells[i])):
+                           if self.grid_access[i][k] == "-":
+                               print(self.grid_access)
+                               self.cells[i][k].highlight_line(win, font)
+                           elif self.grid_access[i][k] == ".":
+                               break
+                        self.cells[i][j].highlight(win, font)
 
-def check_highlight(board, win, font):
-    for i in board.cells:
-        for j in i:
-            if j.check_if_highlighted():
-                board.whiten(win, font)
-                for k in i:
-                   k.highlight_line(win, font)
-                j.highlight(win, font)
-
-    pygame.display.update()
+        pygame.display.update()
 

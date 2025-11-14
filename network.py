@@ -12,7 +12,7 @@ class Network:
     def connect(self):
         try:
             self.client.connect(self.addr)
-            board = pickle.loads(self.client.recv(2048))
+            board = pickle.loads(self.client.recv(16384))
             return board
 
         except:
@@ -26,6 +26,6 @@ class Network:
 
     def receive_board(self):
         try:
-            return pickle.loads(self.client.recv(2048))
+            return pickle.loads(self.client.recv(16384))
         except:
             print("Couldn't receive board")
