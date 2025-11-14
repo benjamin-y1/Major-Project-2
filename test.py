@@ -38,6 +38,15 @@ def main():
                 run = False
                 pygame.quit()
 
+            if event.type == pygame.KEYDOWN:
+                letter = pygame.key.name(event.key).upper()
+
+                for i in range(len(my_board.cells)):
+                    for j in range(len(my_board.cells[i])):
+                        if my_board.cells[i][j].colour == (253, 217, 3):
+                            my_board.cells[i][j].value = letter
+                            my_board.draw(win, font)
+
         #check_highlight(my_board, win, font)
         #my_board.draw(win, font)
         #pygame.display.update()

@@ -8,6 +8,7 @@ class Cell:
         self.y = y
         self.pos = (self.x, self.y)
         self.rect = ""
+        self.num_clicks = 0
 
         self.mousedown = False
 
@@ -38,8 +39,15 @@ class Cell:
             self.mousedown = False
             return False
 
-        if rect.collidepoint(pygame.mouse.get_pos()):
-            return True
+        if rect.collidepoint(pygame.mouse.get_pos()) and self.num_clicks == 0:
+            return 1
+
+        elif rect.collidepoint(pygame.mouse.get_pos()) and self.num_clicks == 1:
+            return 2
+
+        elif rect.collidepoint(pygame.mouse.get_pos()) and self.num_clicks == 2:
+            return 1
+
         return False
 
     def highlight(self, win, font):
@@ -60,6 +68,7 @@ class Board:
         self.start_x = start_x
         self.start_y = start_y
         self.grid_access = grid_access
+        self.direction = "horizontal"
 
         for i in range(self.height):
             for j in range(self.width):
@@ -77,23 +86,72 @@ class Board:
         for i in range(len(self.cells)):
             for j in range(len(self.cells[i])):
                if self.grid_access[i][j] == "-":
-                    print(self.grid_access)
                     self.cells[i][j].colour = (255, 255, 255)
                     self.cells[i][j].draw(win, font)
+
+    def change_click_value(self, win, font, x):
+        for i in range(len(self.cells)):
+            for j in range(len(self.cells[i])):
+               if self.grid_access[i][j] == "-":
+                    self.cells[i][j].num_clicks = x
 
     def check_highlight(self, win, font):
         for i in range(len(self.cells)):
             for j in range(len(self.cells[i])):
                 if self.grid_access[i][j] == "-":
-                    if self.cells[i][j].check_if_highlighted():
+
+                    temp = self.cells[i][j].check_if_highlighted()
+                    if temp == 2:
+                        if self.direction == "horizontal":
+                            self.direction = "vertical"
+                        else:
+                            self.direction = "horizontal"
+
+                    if self.direction == "horizontal":
+                        print("sure")
                         self.whiten(win, font)
-                        for k in range(len(self.cells[i])):
+
+                        for k in range(j, len(self.cells[i])):
                            if self.grid_access[i][k] == "-":
-                               print(self.grid_access)
                                self.cells[i][k].highlight_line(win, font)
+
                            elif self.grid_access[i][k] == ".":
                                break
+
+                        for k in range(0, j)[::-1]:
+                           if self.grid_access[i][k] == "-":
+                               self.cells[i][k].highlight_line(win, font)
+
+                           elif self.grid_access[i][k] == ".":
+                               break
+
                         self.cells[i][j].highlight(win, font)
+
+                    elif self.direction == "vertical":
+                        self.whiten(win, font)
+
+                        print("okay")
+
+                        for l in range(i, len(self.cells)):
+                            if self.grid_access[l][j] == "-":
+                                self.cells[l][j].highlight_line(win, font)
+
+                            elif self.grid_access[l][j] == ".":
+                                break
+
+                        for l in range(0, i)[::-1]:
+                            if self.grid_access[l][j] == "-":
+                                self.cells[l][j].highlight_line(win, font)
+
+                            elif self.grid_access[l][j] == ".":
+                                break
+
+                        self.cells[i][j].highlight(win, font)
+
+
+
+
+
 
         pygame.display.update()
 
